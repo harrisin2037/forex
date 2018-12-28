@@ -85,7 +85,7 @@ func (m *Mysql) connectionSetting() {
 }
 
 func (m *Mysql) setCreateCallback() {
-	m.DB.Callback().Create().Replace("gorm:update_time_stamp", func(scope *gorm.Scope) {
+	m.DB.Debug().Callback().Create().Replace("gorm:update_time_stamp", func(scope *gorm.Scope) {
 		if !scope.HasError() {
 			now := systems.NowInUNIX()
 			if createTimeField, ok := scope.FieldByName("CreatedTime"); ok {
@@ -104,7 +104,7 @@ func (m *Mysql) setCreateCallback() {
 }
 
 func (m *Mysql) setUpdateCallback() {
-	m.DB.Callback().Update().Replace("gorm:update_time_stamp", func(scope *gorm.Scope) {
+	m.DB.Debug().Callback().Update().Replace("gorm:update_time_stamp", func(scope *gorm.Scope) {
 		if _, ok := scope.Get("gorm:update_column"); !ok {
 			scope.SetColumn("EditedTime", systems.NowInUNIX())
 		}
@@ -113,7 +113,7 @@ func (m *Mysql) setUpdateCallback() {
 }
 
 func (m *Mysql) setDeleteCallback() {
-	m.DB.Callback().Delete().Replace("gorm:delete", func(scope *gorm.Scope) {
+	m.DB.Debug().Callback().Delete().Replace("gorm:delete", func(scope *gorm.Scope) {
 		if !scope.HasError() {
 			var extraOption string
 			if str, ok := scope.Get("gorm:delete_option"); ok {

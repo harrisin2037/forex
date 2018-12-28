@@ -74,7 +74,7 @@ func (m *Logger) Builder(c *Content) error {
 		m.LogSavePath = systems.ReplaceSplit(m.LogSavePath)
 
 		m.File, err = systems.MustOpen(
-			fmt.Sprintf("%s%s.%s", m.LogSaveName, time.Now().Local().Format("2006-01-02 15:04:05"), m.LogFileExtension),
+			fmt.Sprintf("%s-%s.%s", m.LogSaveName, time.Now().Local().Format("2006-01-02"), m.LogFileExtension),
 			fmt.Sprintf("%s%s", m.RootPath, m.LogSavePath),
 		)
 		if err != nil {
@@ -87,7 +87,7 @@ func (m *Logger) Builder(c *Content) error {
 		m.ServerLogSaveName = systems.ReplaceSplit(m.ServerLogSaveName)
 
 		m.ServerFile, err = systems.MustOpen(
-			fmt.Sprintf("%s%s.%s", m.ServerLogSaveName, time.Now().Local().Format("2006-01-02 15:04:05"), m.ServerLogFileExtension),
+			fmt.Sprintf("%s-%s.%s", m.ServerLogSaveName, time.Now().Local().Format("2006-01-02"), m.ServerLogFileExtension),
 			fmt.Sprintf("%s%s", m.RootPath, m.ServerLogSavePath),
 		)
 		if err != nil {
@@ -100,7 +100,7 @@ func (m *Logger) Builder(c *Content) error {
 		m.HTTPMessageLogSaveName = systems.ReplaceSplit(m.HTTPMessageLogSaveName)
 
 		m.HTTPMessagesFile, err = systems.MustOpen(
-			fmt.Sprintf("%s%s.%s", m.HTTPMessageLogSaveName, time.Now().Local().Format("2006-01-02 15:04:05"), m.HTTPMessageLogFileExtension),
+			fmt.Sprintf("%s-%s.%s", m.HTTPMessageLogSaveName, time.Now().Local().Format("2006-01-02"), m.HTTPMessageLogFileExtension),
 			fmt.Sprintf("%s%s", m.RootPath, m.HTTPMessageLogSavePath),
 		)
 		if err != nil {
@@ -124,5 +124,5 @@ func (m *Logger) Router(s *Server) {
 }
 
 func (m *Logger) ToJSONFile(obj interface{}) {
-	
+
 }

@@ -31,9 +31,6 @@ func DefaultBuilder(configFiles []string) *Content {
 	for i := 0; i < len(content.App.InUseService); i++ {
 		content.Builder(content.GetFieldOfStructPointer(content.App.InUseService[i]))
 	}
-	// for index := 0; index < len(content.App.InUseService); index++ {
-	// 	fmt.Println(content.GetFieldOfStructPointer(content.App.InUseService[index]))
-	// }
 	return content
 }
 

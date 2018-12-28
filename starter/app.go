@@ -11,6 +11,7 @@ type App struct {
 	ModuleName   string
 	ModuleID     int
 	InUseService []string
+	DebugMode    bool
 
 	// basic setting
 	RootPath         string

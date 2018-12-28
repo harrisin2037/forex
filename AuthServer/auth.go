@@ -17,9 +17,23 @@ func (m *AuthServer) Starter() error {
 	for _, model := range ModelAddrs() {
 		m.Mysql.AutoMigrateByAddr(model)
 	}
+	if m.App.DebugMode {
+		m.debugModeData()
+	}
 	m.TemplateRoutes()
+	m.Routes()
 	m.Server.Starter(m.Content)
 	return nil
+}
+
+func (m *AuthServer) Routes() (routes []gin.IRoutes) {
+
+	group := m.Server.Engine.Group("/api")
+
+	routes = []gin.IRoutes{
+		m.User(group),
+	}
+	return
 }
 
 func (m *AuthServer) TemplateRoutes() (routes []gin.IRoutes) {
@@ -32,25 +46,6 @@ func (m *AuthServer) TemplateRoutes() (routes []gin.IRoutes) {
 	}
 	return
 }
-
-/*
-func (m *AuthServer) Template() gin.IRoutes {
-	type response struct {
-		Status string
-	}
-	doc := document.Doc{
-		FilePath:   "",
-		API:        "/template",
-		Method:     "GET",
-		StatusCode: http.StatusOK,
-		Response:   response{Status: "template"},
-		Handler: func(context *gin.Context) {
-			context.JSON(http.StatusOK, response{Status: "template"})
-		},
-	}
-	return m.Server.Handle(doc.ToJSONResponse())
-}
-*/
 
 func (m *AuthServer) TemplateHttpConnectionCheck(group *gin.RouterGroup) gin.IRoutes {
 	type response struct {
@@ -97,4 +92,56 @@ func (m *AuthServer) TemplateUsers(group *gin.RouterGroup) gin.IRoutes {
 		},
 	}
 	return group.Handle(doc.ToJSONResponse())
+}
+
+func (m *AuthServer) User(group *gin.RouterGroup) gin.IRoutes {
+
+	return group.Handle("GET", "/user", func(c *gin.Context) {
+
+		defer m.Mysql.Connector()()
+
+		req := struct {
+			Unit string `json:"unit"`
+		}{}
+
+		resp := struct {
+			Message string `json:"message"`
+			Users   []User `json:"users"`
+		}{}
+
+		c.BindQuery(&req)
+
+		m.Mysql.DB.Find(&resp.Users)
+		// m.HierachicalUsersCTE()
+
+		c.JSON(http.StatusOK, gin.H{
+			"Response": resp,
+		})
+	})
+}
+
+func (m *AuthServer) UserID(group *gin.RouterGroup) gin.IRoutes {
+
+	return group.Handle("GET", "/user/:id", func(c *gin.Context) {
+
+		defer m.Mysql.Connector()()
+
+		req := struct {
+			Unit string `json:"unit"`
+		}{}
+
+		resp := struct {
+			Message string `json:"message"`
+			Users   []User `json:"users"`
+		}{}
+
+		c.BindQuery(&req)
+
+		m.Mysql.DB.Where("", nil).Find(&resp.Users)
+		// m.HierachicalUsersCTE()
+
+		c.JSON(http.StatusOK, gin.H{
+			"Response": resp,
+		})
+	})
 }

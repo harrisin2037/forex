@@ -1,7 +1,9 @@
 package systems
 
-import "time"
+import (
+	"time"
+)
 
-func NowInUNIX() time.Time {
-	return time.Unix(time.Now().Unix(), 0)
+func NowInUNIX() int64 {
+	return time.Now().Unix()
 }

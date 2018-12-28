@@ -3,7 +3,6 @@ package starter
 import (
 	"errors"
 	"fmt"
-	"forex/api"
 	"net"
 	"net/http"
 	"os"
@@ -107,7 +106,7 @@ func (m *Server) perfomanceCheck() {
 
 func (m *Server) useMiddlewares() {
 	m.Engine.Use(
-		api.CORS(),
+		CORS(),
 		gin.Logger(),
 		gin.Recovery(),
 		ginSessions.Sessions(m.SessionsKey, ginCookie.NewStore([]byte(m.CookieKey))),
